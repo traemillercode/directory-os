@@ -348,7 +348,7 @@ directory-os/
 
 ---
 
-## 🎯 Performance Targets
+## 🏃 Performance Targets
 
 After setup, verify performance benchmarks:
 

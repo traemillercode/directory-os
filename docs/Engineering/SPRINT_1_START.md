@@ -53,7 +53,7 @@ cat docs/Engineering/SPRINT_0_DONE.md
 
 ---
 
-## 🎯 What You're Building
+## 🏗️ What You're Building
 
 ### Issue Description
 
@@ -64,6 +64,8 @@ We need a production-ready Next.js foundation with TypeScript, Tailwind CSS, and
 
 **Implementation Description**:  
 Initialize a Next.js 14+ project with the App Router, TypeScript support, Tailwind CSS for styling, and shadcn/ui for accessible components. Configure build tooling, linting, and type checking.
+
+**Source Documentation**: `docs/Architecture/ARCHITECTURE.md` §Frontend Layer
 
 ---
 
@@ -239,7 +241,7 @@ git push origin feature/e1-1-scaffold-nextjs
 
 ---
 
-## 📤 Creating Your First Pull Request
+## 📄 Creating Your First Pull Request
 
 ### On GitHub:
 
