@@ -18,7 +18,7 @@ DirectoryOS follows the branching model defined in 03_ROADMAP.md:
 
 ### Branch Naming
 
-Branch names are descriptive and prefixed by type, per CURSOR_RULES.md:
+Branch names are descriptive and prefixed by type, per [CURSOR_RULES.md](../AI/CURSOR_RULES.md):
 
 ```
 feature/add-bulk-import
@@ -30,7 +30,7 @@ hotfix/stripe-webhook-failure
 
 ## Commit Messages
 
-DirectoryOS uses **Conventional Commits**, as defined in CURSOR_RULES.md and AUTOMATION.md:
+DirectoryOS uses **Conventional Commits**, as defined in [CURSOR_RULES.md](../AI/CURSOR_RULES.md) and [AUTOMATION.md](../Automation/AUTOMATION.md):
 
 ```
 <type>(<scope>): <subject>
@@ -56,14 +56,14 @@ Implement CSV file upload with:
 Closes #123
 ```
 
-Commit message format is enforced via pre-commit hooks (Husky + lint-staged) and, where configured, Commitizen tooling, as described in AUTOMATION.md.
+Commit message format is enforced via pre-commit hooks (Husky + lint-staged) and, where configured, Commitizen tooling, as described in [AUTOMATION.md](../Automation/AUTOMATION.md).
 
 ## Pull Request Workflow
 
 1. **Open early**: Open a pull request as soon as meaningful work exists, marking it as a draft if it is not yet ready for review. This enables continuous CI feedback and early input.
 2. **Describe the change**: The PR description should explain the problem being solved, the approach taken, and any follow-up work, linking to relevant issues (e.g., `Closes #123`).
 3. **Keep PRs scoped**: A pull request should represent one logical change. Unrelated fixes or refactors belong in separate PRs.
-4. **Required checks**: Every PR must pass the automated pipeline defined in AUTOMATION.md before it can be merged:
+4. **Required checks**: Every PR must pass the automated pipeline defined in [AUTOMATION.md](../Automation/AUTOMATION.md) before it can be merged:
    - Lint & format check
    - TypeScript type check
    - Unit and integration tests (with coverage reporting)
@@ -77,11 +77,11 @@ Commit message format is enforced via pre-commit hooks (Husky + lint-staged) and
 - Reviewers focus on correctness, security, adherence to CODING_STANDARDS.md, test coverage, and architectural fit — not personal style preferences already enforced by linting/formatting tools.
 - Authors should respond to every review comment, either with a code change or a clear explanation.
 - Large or high-risk PRs (auth, billing, database schema, multi-tenancy) should have a second reviewer when feasible.
-- Automated dependency update PRs (Dependabot/Renovate) still require passing tests before merge; minor/patch updates may be configured for auto-merge per AUTOMATION.md, but major version bumps require manual review.
+- Automated dependency update PRs (Dependabot/Renovate) still require passing tests before merge; minor/patch updates may be configured for auto-merge per [AUTOMATION.md](../Automation/AUTOMATION.md), but major version bumps require manual review.
 
 ## Automated Checks & Bots
 
-As defined in AUTOMATION.md:
+As defined in [AUTOMATION.md](../Automation/AUTOMATION.md):
 
 - **Pre-commit hooks** (Husky + lint-staged): run ESLint, Prettier, and TypeScript checks, and validate commit message format before a commit is created.
 - **Dependabot / Renovate**: open automated dependency update PRs; minor/patch updates may auto-merge after tests pass, while major updates require manual review.
@@ -90,14 +90,14 @@ As defined in AUTOMATION.md:
 
 ## Deployment & Release Flow
 
-Per ARCHITECTURE.md's CI/CD Pipeline and 03_ROADMAP.md's Release Strategy:
+Per [ARCHITECTURE.md](../Architecture/ARCHITECTURE.md)'s CI/CD Pipeline and [03_ROADMAP.md](../Product/03_ROADMAP.md)'s Release Strategy:
 
 1. Developer pushes to a `feature/*` branch and opens a PR against `develop`.
 2. GitHub Actions runs linting, type checking, unit tests, and integration tests.
 3. PR requires review approval and passing checks before merge.
 4. Merging to `develop` triggers an automatic deployment to **staging**.
 5. QA (automated and manual) is performed on staging.
-6. Promotion to **production** requires manual approval, as defined in AUTOMATION.md's deployment workflow.
+6. Promotion to **production** requires manual approval, as defined in [AUTOMATION.md](../Automation/AUTOMATION.md)'s deployment workflow.
 7. Rollback is available via the Vercel dashboard if a production issue is detected.
 
 ### Release Cadence by Phase

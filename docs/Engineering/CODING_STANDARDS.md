@@ -15,7 +15,7 @@ These standards describe **what is expected**, not how to implement it — see t
 
 ## Project Structure
 
-Code is organized by responsibility, following the structure defined in CURSOR_RULES.md:
+Code is organized by responsibility, following the structure defined in [CURSOR_RULES.md](../AI/CURSOR_RULES.md):
 
 - `app/` — Next.js App Router routes, grouped by layout (`(auth)`, `(dashboard)`) and API routes
 - `components/` — React components, subdivided into `ui/`, `forms/`, `dialogs/`, `layout/`
@@ -59,7 +59,7 @@ New code must be placed in the directory matching its responsibility rather than
 ```
 
 - Use the status codes defined in API.md consistently (200, 201, 204, 400, 401, 403, 404, 409, 422, 429, 500, 503).
-- API changes must be backward compatible by default: add fields rather than remove/rename them, and follow the deprecation and feature-flag practices defined in ARCHITECTURE.md's API Versioning Strategy.
+- API changes must be backward compatible by default: add fields rather than remove/rename them, and follow the deprecation and feature-flag practices defined in [ARCHITECTURE.md](../Architecture/ARCHITECTURE.md)'s API Versioning Strategy.
 
 ## Input Validation
 
@@ -95,7 +95,7 @@ New code must be placed in the directory matching its responsibility rather than
 - Avoid blocking the main thread with heavy client-side computation; move expensive work to API routes or background jobs.
 - Lazy-load heavy or rarely used UI (e.g., dialogs, charts) using dynamic imports.
 - Use the framework's built-in image optimization for all user-facing images.
-- New code must not regress the performance targets defined in ARCHITECTURE.md (page load < 1s, API p99 < 100ms, DB query p99 < 50ms).
+- New code must not regress the performance targets defined in [ARCHITECTURE.md](../Architecture/ARCHITECTURE.md) (page load < 1s, API p99 < 100ms, DB query p99 < 50ms).
 
 ## Accessibility Standards
 

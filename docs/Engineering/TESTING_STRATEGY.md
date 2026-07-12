@@ -42,8 +42,8 @@ This document defines how DirectoryOS is tested, by whom, and to what standard. 
 
 ### 4. Non-Functional Testing
 
-- **Performance testing**: Validate the performance targets from ARCHITECTURE.md (API p99 < 100ms, DB query p99 < 50ms, page load < 1s) for critical endpoints and pages, especially before major releases.
-- **Security testing**: Automated dependency and static analysis scanning (CodeQL, dependency scanning) runs on every change per AUTOMATION.md; manual security review is required for changes touching authentication, authorization, payments, or PII handling.
+- **Performance testing**: Validate the performance targets from [ARCHITECTURE.md](../Architecture/ARCHITECTURE.md) (API p99 < 100ms, DB query p99 < 50ms, page load < 1s) for critical endpoints and pages, especially before major releases.
+- **Security testing**: Automated dependency and static analysis scanning (CodeQL, dependency scanning) runs on every change per [AUTOMATION.md](../Automation/AUTOMATION.md); manual security review is required for changes touching authentication, authorization, payments, or PII handling.
 - **Accessibility testing**: Critical user-facing flows are checked against basic accessibility requirements (semantic HTML, keyboard operability, ARIA labeling) defined in [CODING_STANDARDS.md](./CODING_STANDARDS.md).
 
 ## What Must Be Tested
@@ -73,7 +73,7 @@ This document defines how DirectoryOS is tested, by whom, and to what standard. 
 
 ## Testing in the CI/CD Pipeline
 
-As defined in AUTOMATION.md and [GITHUB_WORKFLOW.md](./GITHUB_WORKFLOW.md), every push and pull request triggers:
+As defined in [AUTOMATION.md](../Automation/AUTOMATION.md) and [GITHUB_WORKFLOW.md](./GITHUB_WORKFLOW.md), every push and pull request triggers:
 
 1. Linting and formatting checks
 2. TypeScript type checking
@@ -88,7 +88,7 @@ A pull request cannot be merged unless all required checks pass. Flaky tests are
 
 ## Manual QA
 
-- Automated tests are the primary quality gate, but manual QA is performed on staging before production promotion for each release, per the CI/CD pipeline described in ARCHITECTURE.md.
+- Automated tests are the primary quality gate, but manual QA is performed on staging before production promotion for each release, per the CI/CD pipeline described in [ARCHITECTURE.md](../Architecture/ARCHITECTURE.md).
 - Manual QA focuses on exploratory testing, visual/UX review, and validating AI-generated content review flows that are inherently human-in-the-loop.
 - Any bug found in manual QA that is not caught by automated tests should result in a new automated test covering that gap.
 

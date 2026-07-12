@@ -61,7 +61,7 @@ DirectoryOS is built with an AI-first engineering culture. When using Cursor, Gi
 
 ## Performance & Reliability Expectations
 
-Engineers are expected to design and validate changes against the performance targets in ARCHITECTURE.md:
+Engineers are expected to design and validate changes against the performance targets in [ARCHITECTURE.md](../Architecture/ARCHITECTURE.md):
 
 - Page load (LCP) < 1s
 - API response time < 100ms (p99)
@@ -72,7 +72,7 @@ Any change with a material performance impact should include before/after measur
 
 ## Security & Compliance Expectations
 
-- Follow the security measures defined in ARCHITECTURE.md: JWT auth, input validation via Zod, Prisma-based SQL injection prevention, CSP-based XSS protection, and CSRF protection on state-changing operations.
+- Follow the security measures defined in [ARCHITECTURE.md](../Architecture/ARCHITECTURE.md): JWT auth, input validation via Zod, Prisma-based SQL injection prevention, CSP-based XSS protection, and CSRF protection on state-changing operations.
 - Never commit secrets; use environment variables managed via Vercel and local `.env.local` files.
 - Treat all PII in accordance with GDPR/CCPA requirements referenced in [01_PROJECT.md](../Product/01_PROJECT.md) and [02_MVP.md](../Product/02_MVP.md).
 - Report suspected security issues immediately rather than including them in a routine pull request.
