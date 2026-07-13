@@ -1,384 +1,478 @@
-# Development Environment Quickstart
+# Development Quick Start Guide
 
-**Target Time**: < 30 minutes from clone to first successful test run
-
----
-
-## Prerequisites
-
-### Required Software
-
-- **Node.js**: v18.0.0 or higher
-  ```bash
-  node --version  # Verify: v18.x.x or v20.x.x
-  ```
-
-- **npm**: v9.0.0 or higher (comes with Node.js)
-  ```bash
-  npm --version  # Verify: v9.x.x or v10.x.x
-  ```
-
-- **Git**: v2.40.0 or higher
-  ```bash
-  git --version  # Verify: git version 2.x.x
-  ```
-
-- **Code Editor**: VS Code, Cursor, WebStorm, or similar with TypeScript support
+**Objective**: Get your development environment running in 30 minutes  
+**Target**: macOS, Linux, or Windows (WSL2)  
+**Updated**: 2026-07-12  
 
 ---
 
-## Step 1: Clone Repository (2 minutes)
+## ⏱️ Timeline
+
+| Phase | Task | Duration |
+|-------|------|----------|
+| 1 | Clone & Install | 5 min |
+| 2 | Database Setup | 10 min |
+| 3 | Environment Config | 5 min |
+| 4 | Verification | 5 min |
+| 5 | Troubleshooting | As needed |
+| **Total** | | **30 min** |
+
+---
+
+## 📋 Prerequisites
+
+Before starting, ensure you have:
+
+- [ ] **Node.js** 18+ ([Download](https://nodejs.org/))
+- [ ] **npm** 9+ (included with Node.js)
+- [ ] **Git** ([Download](https://git-scm.com/))
+- [ ] **PostgreSQL** (local or Supabase account)
+- [ ] **Text Editor** (VS Code recommended)
+
+### Verify Installations
 
 ```bash
-# Clone the repository
-git clone https://github.com/traemillercode/directory-os.git
-cd directory-os
-
-# Verify directory structure
-ls -la
-# Expected: docs/, .github/, package.json, tsconfig.json, etc.
+# Check versions
+node --version    # Should be v18+
+npm --version     # Should be 9+
+git --version     # Any recent version
 ```
 
 ---
 
-## Step 2: Install Dependencies (3 minutes)
+## 🚀 Quick Start (5 minutes)
+
+### Step 1: Clone Repository
+
+```bash
+# Clone the repo
+git clone https://github.com/traemillercode/directory-os.git
+
+# Navigate to project
+cd directory-os
+```
+
+### Step 2: Install Dependencies
 
 ```bash
 # Install npm packages
 npm install
 
-# Verify installation
-npm ls --depth=0
-# Expected: next, react, typescript, tailwindcss, eslint, prettier, etc.
+# Verify successful installation
+npm list --depth=0
 ```
 
----
+### Step 3: Set Up Database
 
-## Step 3: Set Up Environment Variables (2 minutes)
+**Choose ONE option below:**
 
-### Local Development Setup
+#### Option A: Use Supabase (Cloud) - Recommended for Quick Start
 
 ```bash
-# Copy example env file
+# 1. Go to https://supabase.com and create account
+# 2. Create new project
+# 3. Go to Project Settings → API → Copy:
+#    - Project URL
+#    - Service Role Key (anon_key)
+
+# 4. Create .env.local
 cp .env.example .env.local
 
-# View required variables
-cat .env.local
+# 5. Edit .env.local and add:
+# DATABASE_URL=postgresql://[user]:[password]@[host]:[port]/postgres
+# NEXT_PUBLIC_SUPABASE_URL=[your_project_url]
+# NEXT_PUBLIC_SUPABASE_ANON_KEY=[your_anon_key]
 ```
 
-### Local Database Options
-
-Choose one: **Option A (Recommended for Phase 1)** or **Option B (Simpler, requires Docker)**
-
-#### Option A: Supabase Local (Recommended)
+#### Option B: Use Local PostgreSQL
 
 ```bash
-# Install Supabase CLI globally
-npm install -g supabase
+# macOS - Install via Homebrew
+brew install postgresql
+brew services start postgresql
 
-# Initialize Supabase (if not already done)
-supabase init
+# Linux (Ubuntu/Debian)
+sudo apt-get update
+sudo apt-get install postgresql postgresql-contrib
+sudo systemctl start postgresql
 
-# Start local Supabase instance
-supabase start
+# Windows - Download installer
+# https://www.postgresql.org/download/windows/
 
-# This will start:
-# - PostgreSQL database
-# - Supabase Auth
-# - Supabase Storage
-# - Supabase Realtime
+# Create database
+psql postgres -c "CREATE DATABASE directory_os_dev;"
+psql postgres -c "CREATE USER dev WITH PASSWORD 'dev_password';"
+psql postgres -c "ALTER ROLE dev WITH CREATEDB;"
+GRANT ALL PRIVILEGES ON DATABASE directory_os_dev TO dev;"
 
-# Copy connection string to .env.local
-# The CLI will output something like:
-# postgresql://postgres:postgres@127.0.0.1:54322/postgres
+# Create .env.local
+cp .env.example .env.local
 
-# Update .env.local:
-echo "DATABASE_URL=postgresql://postgres:postgres@127.0.0.1:54322/postgres" >> .env.local
+# Edit .env.local:
+# DATABASE_URL=postgresql://dev:dev_password@localhost:5432/directory_os_dev
 ```
 
-#### Option B: Docker PostgreSQL (Simpler)
+### Step 4: Verify Installation
 
 ```bash
-# Install Docker: https://docs.docker.com/get-docker/
-
-# Start PostgreSQL container
-docker run --name postgres-local \
-  -e POSTGRES_PASSWORD=password \
-  -e POSTGRES_DB=directoryos \
-  -p 5432:5432 \
-  -d postgres:15
-
-# Update .env.local:
-echo "DATABASE_URL=postgresql://postgres:password@localhost:5432/directoryos" >> .env.local
-```
-
-### Verify Database Connection
-
-```bash
-# Test connection (after Supabase or Docker is running)
-psql $DATABASE_URL -c "SELECT 1;"
-# Expected output: should return 1
-```
-
----
-
-## Step 4: Initialize Database Schema (3 minutes)
-
-```bash
-# Run Prisma migrations
-npx prisma migrate dev --name init
-
-# This will:
-# 1. Create tables (organizations, users, listings, etc.)
-# 2. Enable Row-Level Security policies
-# 3. Generate Prisma client
-
-# Verify schema
-npx prisma db push
-# Expected: No migrations needed (already applied)
-```
-
----
-
-## Step 5: Seed Database (2 minutes)
-
-```bash
-# Run seed script (if available)
-npm run prisma:seed 2>/dev/null || echo "Seed script not yet created"
-
-# Verify data
-npx prisma studio
-# Opens http://localhost:5555 with database GUI
-# View: organizations, users, categories tables
-# Stop with Ctrl+C
-```
-
----
-
-## Step 6: Verify Build Tools (3 minutes)
-
-### Type Checking
-
-```bash
+# Run all verification checks
 npm run type-check
-# Expected: No errors
-```
-
-### Linting
-
-```bash
 npm run lint
-# Expected: No errors (warnings are OK)
+npm test
 
-# Auto-fix formatting issues
-npm run lint -- --fix
-```
-
-### Build
-
-```bash
-npm run build
-# Expected: Compiles successfully in < 30 seconds
-```
-
-### Tests
-
-```bash
-# Unit tests
-npm run test
-# Expected: Pass or no tests yet (if not implemented)
-
-# Integration tests (requires database)
-npm run test:integration
-# Expected: Pass or no tests yet
-```
-
----
-
-## Step 7: Start Development Server (2 minutes)
-
-```bash
-# Start the development server
+# Start development server
 npm run dev
+```
 
-# Expected output:
-# > next dev
-# ▲ Next.js 14.x
-# - Local:        http://localhost:3000
-# - Environments: .env.local
+✅ **You're done!** Open http://localhost:3000
 
-# Open browser: http://localhost:3000
-# Expected: Page loads (may be blank if not yet implemented)
+---
 
-# Stop server: Press Ctrl+C
+## 📚 Database Setup Details (10 minutes)
+
+### Supabase Setup (Recommended)
+
+#### Sign Up & Create Project
+
+1. Go to [https://supabase.com](https://supabase.com)
+2. Click "Start your project"
+3. Sign up with GitHub (or email)
+4. Create new organization
+5. Create new project:
+   - Name: `directory-os-dev`
+   - Region: Closest to you
+   - Password: Store securely
+
+#### Get Connection String
+
+1. Go to **Project Settings** (gear icon)
+2. Click **Database** tab
+3. Under **Connection Strings**, select **URI**
+4. Copy the connection string
+5. Paste into `.env.local` as `DATABASE_URL`
+
+#### Verify Connection
+
+```bash
+# Test connection
+psql $DATABASE_URL -c "SELECT NOW();"
+
+# Should return current timestamp
+# If successful: connection is working
+```
+
+### Local PostgreSQL Setup
+
+#### macOS Setup
+
+```bash
+# Install PostgreSQL
+brew install postgresql
+
+# Start service
+brew services start postgresql
+
+# Verify
+psql --version
+```
+
+#### Linux Setup (Ubuntu)
+
+```bash
+# Update packages
+sudo apt-get update
+
+# Install PostgreSQL
+sudo apt-get install postgresql postgresql-contrib
+
+# Start service
+sudo systemctl start postgresql
+
+# Verify
+psql --version
+```
+
+#### Windows Setup
+
+1. Download installer: [PostgreSQL Windows](https://www.postgresql.org/download/windows/)
+2. Run installer
+3. Remember password (needed for `.env.local`)
+4. Verify: Open PowerShell and run `psql --version`
+
+#### Create Development Database
+
+```bash
+# Connect to PostgreSQL
+psql postgres
+
+# Create database
+CREATE DATABASE directory_os_dev;
+
+# Create user
+CREATE USER dev WITH PASSWORD 'dev_password';
+
+# Grant privileges
+ALTER ROLE dev WITH CREATEDB;
+GRANT ALL PRIVILEGES ON DATABASE directory_os_dev TO dev;
+
+# Verify
+\l  # List databases
+\du # List users
+
+# Exit
+\q
+```
+
+#### Set Connection String
+
+```bash
+# Edit .env.local
+echo "DATABASE_URL=postgresql://dev:dev_password@localhost:5432/directory_os_dev" >> .env.local
 ```
 
 ---
 
-## Verification Checklist
+## ⚙️ Environment Configuration (5 minutes)
 
-After completing all steps, verify:
+### Create `.env.local`
 
-- [ ] `npm run type-check` passes with zero errors
-- [ ] `npm run lint` passes with zero errors
-- [ ] `npm run build` completes successfully
-- [ ] `npm run dev` starts server on localhost:3000
-- [ ] `DATABASE_URL` is set in `.env.local`
-- [ ] Database connection works: `psql $DATABASE_URL -c "SELECT 1;"`
-- [ ] Prisma schema is initialized: tables visible in `npx prisma studio`
-- [ ] Git is configured: `git config user.name` and `git config user.email` are set
+```bash
+cp .env.example .env.local
+```
 
----
+### Edit `.env.local`
 
-## 🚨 Troubleshooting
+**For Supabase:**
 
-### "npm: command not found"
+```env
+# Supabase Connection
+DATABASE_URL=postgresql://postgres:[password]@[id].supabase.co:5432/postgres
+NEXT_PUBLIC_SUPABASE_URL=https://[id].supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=[anon_key]
 
-**Solution**: Install Node.js from https://nodejs.org/  
-Verify: `npm --version`
+# API Configuration
+NEXT_PUBLIC_API_URL=http://localhost:3000/api
 
-### "DATABASE_URL not recognized"
+# Environment
+NODE_ENV=development
+```
 
-**Solution**:
+**For Local PostgreSQL:**
+
+```env
+# Local PostgreSQL
+DATABASE_URL=postgresql://dev:dev_password@localhost:5432/directory_os_dev
+
+# API Configuration
+NEXT_PUBLIC_API_URL=http://localhost:3000/api
+
+# Environment
+NODE_ENV=development
+```
+
+### Verify Variables
+
 ```bash
 # Ensure .env.local exists
-ls .env.local
+ls -la .env.local
 
-# Ensure DATABASE_URL is in the file
+# Check variables are set (don't print values)
 grep DATABASE_URL .env.local
-
-# Reload shell (or restart code editor)
 ```
 
-### "connection refused" when running migrations
+---
 
-**Solution**:
+## ✅ Verification Checklist (5 minutes)
 
-**If using Supabase**:
+### Run All Checks
+
 ```bash
-# Verify Supabase is running
-supabase status
-
-# If not running, start it
-supabase start
-```
-
-**If using Docker**:
-```bash
-# Verify container is running
-docker ps | grep postgres
-
-# If not running, start it
-docker start postgres-local
-```
-
-### "npm run build" fails with type errors
-
-**Solution**:
-```bash
-# Check type errors
+# 1. TypeScript check
+echo "[1/5] Running TypeScript check..."
 npm run type-check
 
-# View full error messages
-# Fix errors in source files
-# Retry build
+# Expected: No errors, "Successfully compiled..."
+
+# 2. Linting
+echo "[2/5] Running ESLint..."
+npm run lint
+
+# Expected: No errors or warnings
+
+# 3. Unit tests
+echo "[3/5] Running tests..."
+npm test -- --passWithNoTests
+
+# Expected: "PASS" status
+
+# 4. Build
+echo "[4/5] Building for production..."
 npm run build
+
+# Expected: "compiled successfully"
+
+# 5. Development server
+echo "[5/5] Starting dev server..."
+npm run dev
+
+# Expected: Server running on http://localhost:3000
 ```
 
-### "Cannot find module" errors
+### Browser Check
 
-**Solution**:
+1. Open http://localhost:3000
+2. Should see Directory-OS welcome page
+3. Check browser console: No red errors
+
+✅ **All checks passing? Setup complete!**
+
+---
+
+## 🐛 Troubleshooting
+
+### Issue: "Cannot find module 'next'"
+
+**Solution:**
+
 ```bash
 # Reinstall dependencies
 rm -rf node_modules package-lock.json
 npm install
 ```
 
-### "Port 3000 already in use"
+### Issue: Database connection failed
 
-**Solution**:
+**Solution:**
+
 ```bash
-# Kill process using port 3000
-lsof -i :3000
-# Note the PID, then kill it:
-kill -9 [PID]
+# Verify connection string
+grep DATABASE_URL .env.local
 
-# Or use a different port
+# Test connection manually
+psql $DATABASE_URL -c "SELECT NOW();"
+
+# If using Supabase, verify:
+# - Project is active on Supabase dashboard
+# - Connection string is correct (check special chars)
+# - If using local: PostgreSQL service is running
+#   - macOS: brew services list | grep postgresql
+#   - Linux: sudo systemctl status postgresql
+#   - Windows: Services app → PostgreSQL
+```
+
+### Issue: Port 3000 already in use
+
+**Solution:**
+
+```bash
+# Find process using port 3000
+lsof -i :3000
+
+# Kill process
+kill -9 <PID>
+
+# Or use different port
 PORT=3001 npm run dev
 ```
 
----
+### Issue: npm install hangs
 
-## 📂 Project Structure
+**Solution:**
 
-After setup, your directory should look like:
+```bash
+# Clear npm cache
+npm cache clean --force
 
-```
-directory-os/
-├── app/                      # Next.js App Router pages
-├── components/               # React components
-├── lib/                      # Utilities and helpers
-├── public/                   # Static assets
-├── prisma/
-│   ├── schema.prisma        # Database schema
-│   ├── migrations/          # Migration files
-│   └── seed.ts              # Seed script
-├── .env.local               # Local env vars (gitignored)
-├── .env.example             # Template for env vars
-├── .eslintrc.json           # ESLint configuration
-├── .prettierrc.json         # Prettier configuration
-├── tsconfig.json            # TypeScript configuration
-├── tailwind.config.ts       # Tailwind CSS configuration
-├── next.config.js           # Next.js configuration
-├── package.json             # Dependencies
-└── docs/                    # Documentation
+# Retry with verbose output
+npm install --verbose
+
+# If still failing, try yarn
+curl https://raw.githubusercontent.com/yarnpkg/yarn/master/scripts/install-yarn.sh | bash
+yarn install
 ```
 
----
+### Issue: TypeScript errors on startup
 
-## 📚 Next Steps
+**Solution:**
 
-1. **Read Sprint 1 kickoff**: `docs/Engineering/SPRINT_1_START.md`
-2. **Start first issue**: E1-1 Scaffold Next.js (already done if you completed Step 6 above)
-3. **Create first branch**: `git checkout -b feature/e1-1-scaffold-nextjs`
-4. **Make changes**: Follow issue acceptance criteria
-5. **Push and create PR**: `git push origin feature/e1-1-scaffold-nextjs`
-6. **Get feedback**: Wait for CI and code review
-7. **Merge**: Once approved, merge to `develop`
+```bash
+# Regenerate TypeScript cache
+rm -rf .next
+npm run type-check
 
----
+# If errors persist, check tsconfig.json
+cat tsconfig.json
+```
 
-## 🏃 Performance Targets
+### Issue: Tests won't run
 
-After setup, verify performance benchmarks:
+**Solution:**
 
-| Task | Target | How to Test |
-|------|--------|-------------|
-| Build | < 30 seconds | `time npm run build` |
-| Type check | < 10 seconds | `time npm run type-check` |
-| Lint | < 15 seconds | `time npm run lint` |
-| Dev server startup | < 5 seconds | `npm run dev` |
-| Page load (localhost) | < 1 second | Browser DevTools Performance tab |
+```bash
+# Verify Jest is installed
+npm list jest
 
----
+# Ensure jest.config.ts exists
+ls jest.config.ts jest.setup.ts
 
-## 🔗 Resources
+# Run with verbose output
+npm test -- --verbose
 
-- **Next.js Documentation**: https://nextjs.org/docs
-- **TypeScript Handbook**: https://www.typescriptlang.org/docs/
-- **Tailwind CSS Docs**: https://tailwindcss.com/docs
-- **shadcn/ui Documentation**: https://ui.shadcn.com/
-- **Prisma Documentation**: https://www.prisma.io/docs/
-- **Supabase Documentation**: https://supabase.com/docs
-- **Git Documentation**: https://git-scm.com/doc
+# Check test file exists
+ls tests/*.test.tsx
+```
 
 ---
 
-## ❓ Still Stuck?
+## 📖 Common Commands
 
-1. **Check GitHub Issues**: Search for similar problems
-2. **Read DEVELOPMENT_WORKFLOW.md**: More detailed development guidance
-3. **Ask in issue comments**: Comment on the relevant GitHub issue
-4. **CTO support**: Reach out for architecture/dependency questions
+### Development
 
-**Success!** You're now ready to start building DirectoryOS. 🚀
+```bash
+npm run dev         # Start dev server (http://localhost:3000)
+npm run type-check  # Check TypeScript
+npm run lint        # Run ESLint
+npm run lint:fix    # Fix ESLint issues
+npm run format      # Format with Prettier
+```
+
+### Testing
+
+```bash
+npm test            # Run tests once
+npm run test:watch  # Watch mode
+npm test -- --cov   # With coverage
+```
+
+### Production
+
+```bash
+npm run build       # Build for production
+npm run start       # Start production server
+```
+
+---
+
+## 🔗 Useful Links
+
+- **Next.js Docs**: https://nextjs.org/docs
+- **TypeScript Docs**: https://www.typescriptlang.org/docs/
+- **Supabase Docs**: https://supabase.com/docs
+- **PostgreSQL Docs**: https://www.postgresql.org/docs/
+- **ESLint Rules**: https://eslint.org/docs/rules/
+- **Jest Docs**: https://jestjs.io/docs/getting-started
+
+---
+
+## ✨ Next Steps
+
+After setup completes:
+
+1. ✅ Create a feature branch: `git checkout -b feature/your-task`
+2. ✅ Read [SPRINT_1_START.md](SPRINT_1_START.md)
+3. ✅ Pick first issue to work on
+4. ✅ Create a pull request when done
+
+---
+
+**Setup complete! Ready to start coding? 🚀**

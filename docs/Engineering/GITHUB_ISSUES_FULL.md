@@ -1,1178 +1,954 @@
-# DirectoryOS GitHub Issues — Complete Specification
+# GitHub Issues - Complete Specification
 
-**Source**: `docs/Engineering/MVP_BACKLOG.md`  
+**Project**: Directory-OS  
 **Total Issues**: 43  
-**Total Epics**: 8  
-**Total Milestones**: 5  
-
-This document contains the complete specification for all 43 GitHub issues. Copy the issue details below to create GitHub issues in your repository.
+**Organization**: By Milestone (M1-M5) and Epic (E1-E8)  
+**Updated**: 2026-07-12  
 
 ---
 
-## MILESTONE 1: M1 — Core Infrastructure (Weeks 1-3)
+## 📋 Issue Template Format
 
-**Description**: Foundational work — nothing else can start until M1 is complete. Includes deployment infrastructure, database foundation, and authentication/authorization.
+Each issue includes:
 
-**Issues**: 18 total  
-**Epics Covered**: E1 (Infrastructure), E2 (Database), E3 (Authentication)  
-**Exit Criteria**: Deployed app with auth, database, CI/CD pipeline working
-
----
-
-### Epic E1: Core Infrastructure & Deployment (5 issues)
-
-#### Issue E1-1: Scaffold Next.js + TypeScript + Tailwind + shadcn/ui project
-
-**Labels**: `type:infra`, `area:infra`, `phase:1a-core-infra`, `priority:P0`, `complexity:S`  
-**Milestone**: M1  
-**Depends On**: None
-
-**Description**:
-We need a production-ready Next.js foundation with TypeScript, Tailwind CSS, and shadcn/ui components. This is the root dependency for all subsequent issues — nothing else can start until this is working.
-
-**Acceptance Criteria**:
-- [ ] Next.js 14+ with App Router
-  - `npm run dev` starts the dev server on localhost:3000
-  - `npm run build` completes without errors
-  - `npm run start` runs the production build locally
-- [ ] TypeScript Configuration
-  - `tsconfig.json` is strict mode enabled
-  - `npm run type-check` passes with zero errors
-  - All component files are `.tsx`, all utilities are `.ts`
-- [ ] Tailwind CSS
-  - `tailwind.config.ts` is configured
-  - Tailwind classes are available in components
-  - `npm run build` includes Tailwind in the output
-- [ ] shadcn/ui Setup
-  - `components.json` exists with proper configuration
-  - At least one shadcn component (e.g., Button) is installed and importable
-  - Components can be rendered without errors
-- [ ] Linting & Formatting
-  - `.eslintrc.json` is configured for Next.js + TypeScript
-  - `.prettierrc.json` is configured
-  - `npm run lint` passes with zero errors
-- [ ] Project Structure
-  - `app/`, `components/`, `lib/`, `public/` directories exist
-- [ ] GitHub Actions CI Ready
-  - `npm run lint`, `npm run type-check`, `npm run test` commands exist
-
-**Definition of Done** (from MVP_BACKLOG.md §5):
-- [ ] Code implemented and matches ARCHITECTURE.md §Frontend Layer
-- [ ] No new architecture/tables/endpoints introduced
-- [ ] Unit/integration tests written and passing
-- [ ] Linting and type-checking pass with no new errors
-- [ ] No hardcoded secrets
-- [ ] Code reviewed
-- [ ] Relevant documentation updated
-- [ ] Merged to main without breaking CI
-- [ ] `npm run dev` starts cleanly on localhost:3000
-- [ ] `npm run build` completes in < 30 seconds
-- [ ] Project structure matches CODING_STANDARDS.md
-
-**Source Documentation**: `docs/Architecture/ARCHITECTURE.md` §Frontend Layer
+- **Title**: Clear, actionable name
+- **Labels**: Type, Area, Complexity, Priority, Phase
+- **Milestone**: M1-M5 (sprints)
+- **Epic**: E1-E8 (feature grouping)
+- **Acceptance Criteria**: What done looks like
+- **Definition of Done**: Quality gates
+- **Dependencies**: Blocking issues
+- **Estimate**: Story points
 
 ---
 
-#### Issue E1-2: Provision Supabase project (Postgres, Auth, Storage)
+## 🏃 MILESTONE 1: Foundation & Auth (Sprint 1)
 
-**Labels**: `type:infra`, `area:infra`, `phase:1a-core-infra`, `priority:P0`, `complexity:S`  
-**Milestone**: M1  
-**Depends On**: E1-1
+### E1: Project Initialization & Setup
 
-**Description**:
-Provision a Supabase project with PostgreSQL database, Auth service, and Storage buckets. This provides the backend infrastructure for all data and authentication.
+#### [E1-1] Scaffold Next.js Application
 
-**Acceptance Criteria**:
-- [ ] Supabase project created for staging and production
-- [ ] Postgres connection string available via environment variables
-- [ ] Supabase Auth enabled (email/password method)
-- [ ] Supabase Storage bucket created (e.g., `listing-images`)
-- [ ] Local connection test: `psql $DATABASE_URL -c "SELECT 1;"` succeeds
+```
+Title: Scaffold Next.js Application
+Labels: type:feature, area:frontend, complexity:small, priority:critical, phase:planning
+Milestone: M1 - Foundation & Auth
+Story Points: 3
 
-**Definition of Done**:
-- [ ] Connection verified from local app via a health-check script/route
-- [ ] Environment variables configured correctly
-- [ ] No secrets committed to source code
-- [ ] Supabase CLI installed and verified working
+Problem Statement:
+The project needs a production-ready Next.js foundation with modern tooling, TypeScript,
+linting, and testing infrastructure.
 
-**Source Documentation**: `docs/Architecture/ARCHITECTURE.md` §Backend Layer
+Acceptance Criteria:
+- Next.js 14 app running on http://localhost:3000
+- TypeScript enabled with strict mode
+- ESLint configured and passing
+- Prettier configured for code formatting
+- Jest and React Testing Library set up
+- Welcome page displaying correctly
+- Production build succeeds
+- All scripts working (dev, build, test, lint, format)
+- README updated with setup instructions
+- .env.example created with required variables
 
----
+Definition of Done:
+1. All acceptance criteria met
+2. No ESLint warnings or errors
+3. All tests passing
+4. TypeScript type-check passing
+5. Production build verified
+6. Code reviewed and approved
+7. PR merged to main
 
-#### Issue E1-3: Configure environment management (staging/production)
+Dependencies: None
+Owner: Lead Frontend Developer
+```
 
-**Labels**: `type:chore`, `area:infra`, `phase:1a-core-infra`, `priority:P0`, `complexity:XS`  
-**Milestone**: M1  
-**Depends On**: E1-2
+#### [E1-2] Configure Project Repository & Tooling
 
-**Description**:
-Set up environment variable management for staging and production, ensuring no secrets are committed to source control.
+```
+Title: Configure Project Repository & Tooling
+Labels: type:chore, area:devops, complexity:small, priority:critical, phase:planning
+Milestone: M1 - Foundation & Auth
+Story Points: 2
 
-**Acceptance Criteria**:
-- [ ] `.env.example` documents all required variables
-- [ ] Staging and production environments have separate, non-shared secrets
-- [ ] No secrets committed to source control
-- [ ] GitHub secret scanning enabled and passing
+Problem Statement:
+Project needs GitHub configuration including branch protection, GitHub Actions workflow
+setup, and development tooling configuration.
 
-**Definition of Done**:
-- [ ] Secret scan run with zero findings
-- [ ] `.env.local` is gitignored
-- [ ] Vercel environment variables configured
+Acceptance Criteria:
+- GitHub Actions CI/CD workflows created and passing
+- Branch protection rules configured for main
+- Pre-commit hooks set up (Husky)
+- Code coverage tracking configured
+- Automated linting and testing on PR
+- CONTRIBUTING.md created
+- CODE_OF_CONDUCT.md created
+- License file added
 
-**Source Documentation**: `docs/Product/02_MVP.md` §Phase 1A #3
+Definition of Done:
+1. All workflows passing
+2. Branch protection verified
+3. PR checks running automatically
+4. Documentation reviewed
+5. Team has access to all tools
 
----
+Dependencies: E1-1
+Owner: DevOps Lead
+```
 
-#### Issue E1-4: Vercel deployment (staging + production) with GitHub Actions CI
+#### [E1-3] Set Up Development Database (PostgreSQL)
 
-**Labels**: `type:infra`, `area:infra`, `phase:1a-core-infra`, `priority:P0`, `complexity:M`  
-**Milestone**: M1  
-**Depends On**: E1-1, E1-3
+```
+Title: Set Up Development Database (PostgreSQL)
+Labels: type:chore, area:database, complexity:small, priority:critical, phase:planning
+Milestone: M1 - Foundation & Auth
+Story Points: 2
 
-**Description**:
-Set up Vercel deployment for staging and production, with GitHub Actions CI pipeline that runs linting, type-checking, and tests on every PR.
+Problem Statement:
+Developers need a configured PostgreSQL database with proper schema, migrations setup,
+and seeding for development.
 
-**Acceptance Criteria**:
-- [ ] Vercel project connected to repository with auto-deploy on merge to main
-- [ ] Staging deployment triggers on PR/preview branches
-- [ ] GitHub Actions workflow runs lint, type-check, and tests on every PR
-- [ ] Failing CI blocks merge
-- [ ] A test PR shows green CI and a working preview deployment URL
+Acceptance Criteria:
+- PostgreSQL configured (local or Supabase)
+- Database schema initialized
+- Migration system configured
+- Sample data seeding script created
+- Connection pooling set up (if needed)
+- Backup/restore scripts documented
+- Database docs updated
 
-**Definition of Done**:
-- [ ] `.github/workflows/ci.yml` exists and is valid
-- [ ] Preview deployment URL works
-- [ ] CI passes on test PR
-- [ ] Branch protection rule requires passing CI
+Definition of Done:
+1. Database accessible from app
+2. Schema matches architecture docs
+3. Migrations running successfully
+4. Sample data available
+5. Team can connect locally
 
-**Source Documentation**: `docs/Product/02_MVP.md` §Phase 1A #3; `docs/Product/01_PROJECT.md` §Technology Foundation
+Dependencies: E1-1
+Owner: Database/Backend Lead
+```
 
----
+### E2: Authentication & User Management
 
-#### Issue E1-5: Integrate Sentry monitoring and logging
+#### [E2-1] Implement Auth Service Integration (Supabase Auth)
 
-**Labels**: `type:infra`, `area:infra`, `phase:1a-core-infra`, `priority:P1`, `complexity:S`  
-**Milestone**: M1  
-**Depends On**: E1-4
+```
+Title: Implement Auth Service Integration (Supabase Auth)
+Labels: type:feature, area:backend, complexity:medium, priority:critical, phase:planning
+Milestone: M1 - Foundation & Auth
+Story Points: 5
 
-**Description**:
-Integrate Sentry SDK for error tracking and monitoring in both frontend and API routes.
+Problem Statement:
+The application requires a robust authentication system supporting email/password
+and OAuth (Google, GitHub).
 
-**Acceptance Criteria**:
-- [ ] Sentry SDK integrated in frontend and API routes
-- [ ] Errors from staging and production captured with environment tags
-- [ ] A manually triggered test error appears in Sentry dashboard
-- [ ] Source maps uploaded for stack trace accuracy
-- [ ] Staging and production environments tagged separately
+Acceptance Criteria:
+- Supabase Auth integrated into app
+- Email/password signup and login working
+- OAuth (Google, GitHub) configured and working
+- Password reset flow implemented
+- Email verification flow implemented
+- Auth state persisted properly
+- Protected routes implemented
+- API endpoints secured with auth middleware
+- Unit tests for auth service
+- 80%+ code coverage for auth module
 
-**Definition of Done**:
-- [ ] Verified error captured in Sentry with source map support
-- [ ] Sentry alerts configured
-- [ ] Error grouping rules applied
+Definition of Done:
+1. All auth flows tested manually
+2. API endpoints authenticated
+3. Protected routes verified
+4. OAuth working end-to-end
+5. Code reviewed and approved
+6. Documentation updated
 
-**Source Documentation**: `docs/Product/02_MVP.md` §Phase 1A #3
+Dependencies: E1-1, E1-3
+Owner: Backend Lead
+```
 
----
+#### [E2-2] Create Login & Sign-Up Pages
 
-### Epic E2: Database Foundation (8 issues)
+```
+Title: Create Login & Sign-Up Pages
+Labels: type:feature, area:frontend, complexity:medium, priority:critical, phase:planning
+Milestone: M1 - Foundation & Auth
+Story Points: 5
 
-#### Issue E2-1: Set up Prisma ORM and migration workflow
+Problem Statement:
+Frontend needs user-friendly, accessible login and sign-up pages with form validation,
+error handling, and OAuth buttons.
 
-**Labels**: `type:infra`, `area:database`, `phase:1a-core-infra`, `priority:P0`, `complexity:S`  
-**Milestone**: M1  
-**Depends On**: E1-2
+Acceptance Criteria:
+- Login page with email/password form
+- Sign-up page with email, password, name fields
+- OAuth buttons (Google, GitHub)
+- Form validation with helpful error messages
+- Loading states on forms
+- Accessible forms (WCAG 2.1 AA)
+- Responsive design (mobile-first)
+- Error handling and user feedback
+- Password requirements shown
+- Email verification prompt
+- Forgot password link
+- Tests for form interactions
 
-**Description**:
-Set up Prisma ORM and establish the migration workflow for database schema management.
+Definition of Done:
+1. Pages fully functional
+2. All forms validated
+3. Accessibility audit passing
+4. Mobile testing completed
+5. Component tests passing
+6. Design review approved
 
-**Acceptance Criteria**:
-- [ ] Prisma installed and connected to Supabase Postgres
-- [ ] `prisma migrate` workflow documented and working locally and in CI
-- [ ] A sample migration applies cleanly on a fresh database
+Dependencies: E2-1, E1-1
+Owner: Frontend Lead
+```
 
-**Definition of Done**:
-- [ ] `prisma generate` auto-generates Prisma client types
-- [ ] `prisma migrate dev --name init` creates first migration
-- [ ] Migrations are version controlled
+#### [E2-3] Create User Profile Page
 
-**Source Documentation**: `docs/Architecture/ARCHITECTURE.md` §Prisma ORM
+```
+Title: Create User Profile Page
+Labels: type:feature, area:frontend, complexity:small, priority:high, phase:planning
+Milestone: M1 - Foundation & Auth
+Story Points: 3
 
----
+Problem Statement:
+Users need a profile page to view and edit their account information and preferences.
 
-#### Issue E2-2: Implement `organizations` table + RLS
+Acceptance Criteria:
+- Profile page showing user info
+- Edit profile form (name, email, avatar)
+- Password change functionality
+- Session management (view active sessions)
+- Logout all sessions option
+- Preferences/settings section
+- Two-factor authentication setup
+- Delete account option (with confirmation)
+- Change email flow
+- Profile picture upload
 
-**Labels**: `type:feature`, `area:database`, `phase:1a-core-infra`, `priority:P0`, `complexity:S`  
-**Milestone**: M1  
-**Depends On**: E2-1
+Definition of Done:
+1. All profile functions working
+2. Data persisting correctly
+3. Accessible form interface
+4. Mobile-responsive
+5. Component tests passing
+6. API integration tested
 
-**Description**:
-Create the organizations table as the foundation for multi-tenancy, with Row-Level Security policies.
-
-**Acceptance Criteria**:
-- [ ] Table schema matches DATABASE.md (id, name, slug, timezone, industry, subscription_tier, etc.)
-- [ ] Row-Level Security enabled scoping access by `organization_id`
-- [ ] Indexes on `slug` and `subscription_tier` created
-- [ ] RLS policy verified to block cross-organization reads in a test
-
-**Definition of Done**:
-- [ ] Migration applies cleanly
-- [ ] RLS policies tested and verified
-- [ ] Indexes created and verified
-
-**Source Documentation**: `docs/Architecture/DATABASE.md` §1. organizations
-
----
-
-#### Issue E2-3: Implement `users` table + RLS
-
-**Labels**: `type:feature`, `area:database`, `phase:1a-core-infra`, `priority:P0`, `complexity:S`  
-**Milestone**: M1  
-**Depends On**: E2-2
-
-**Description**:
-Create the users table with role-based access control and multi-tenancy support.
-
-**Acceptance Criteria**:
-- [ ] Table schema matches DATABASE.md (id, organization_id FK, email, role, password_hash, etc.)
-- [ ] Role check constraint enforces admin/editor/viewer
-- [ ] RLS restricts users to their own organization
-- [ ] Unique index on (organization_id, email)
-
-**Definition of Done**:
-- [ ] Migration applies cleanly
-- [ ] Role check constraint verified to reject invalid roles
-- [ ] RLS policies tested
-
-**Source Documentation**: `docs/Architecture/DATABASE.md` §2. users
-
----
-
-#### Issue E2-4: Implement `categories` table
-
-**Labels**: `type:feature`, `area:database`, `phase:1a-core-infra`, `priority:P1`, `complexity:XS`  
-**Milestone**: M1  
-**Depends On**: E2-2
-
-**Description**:
-Create the categories lookup table for listing classification.
-
-**Acceptance Criteria**:
-- [ ] Table stores category name, slug, hierarchy/classification
-- [ ] Seed data for common categories available (e.g., "Plumber", "Electrician", "Restaurant")
-- [ ] Seed script runs without error
-
-**Definition of Done**:
-- [ ] Migration applies cleanly
-- [ ] Seed data persists and can be queried
-- [ ] Foreign key relationships verified
-
-**Source Documentation**: `docs/Product/02_MVP.md` §Phase 1A #2
-
----
-
-#### Issue E2-5: Implement `listings` table + RLS
-
-**Labels**: `type:feature`, `area:database`, `phase:1a-core-infra`, `priority:P0`, `complexity:M`  
-**Milestone**: M1  
-**Depends On**: E2-2, E2-4
-
-**Description**:
-Create the core listings table with geospatial support and multi-tenancy enforcement.
-
-**Acceptance Criteria**:
-- [ ] Table includes all MVP fields: name, category, description, address, latitude/longitude, hours, images, social_links, status, etc.
-- [ ] RLS scopes listings by `organization_id`
-- [ ] Indexes support search/filter/sort at 1,000+ rows
-- [ ] Geospatial indexes for location queries
-- [ ] Soft delete support (deleted_at column)
-
-**Definition of Done**:
-- [ ] Query plan reviewed for primary listing search query
-- [ ] Index usage verified via `EXPLAIN ANALYZE`
-- [ ] RLS policies tested
-- [ ] Geospatial queries tested
-
-**Source Documentation**: `docs/Architecture/DATABASE.md` §3. listings
+Dependencies: E2-1, E1-1
+Owner: Frontend Lead
+```
 
 ---
 
-#### Issue E2-6: Implement `listings_audit` table
+## 🏃 MILESTONE 2: Core Directory Features (Sprint 2)
 
-**Labels**: `type:feature`, `area:database`, `phase:1a-core-infra`, `priority:P1`, `complexity:S`  
-**Milestone**: M1  
-**Depends On**: E2-5
+### E3: User Directory Management
 
-**Description**:
-Create audit trail table for listing change tracking.
+#### [E3-1] Create User Directory API (CRUD Endpoints)
 
-**Acceptance Criteria**:
-- [ ] Table captures change tracking (who, what, when) for listing mutations
-- [ ] Audit rows created automatically on listing create/update/delete
-- [ ] A listing update produces exactly one corresponding audit row in tests
+```
+Title: Create User Directory API (CRUD Endpoints)
+Labels: type:feature, area:backend, complexity:medium, priority:critical, phase:planning
+Milestone: M2 - Core Directory Features
+Story Points: 5
 
-**Definition of Done**:
-- [ ] Prisma schema includes trigger or application-level audit logic
-- [ ] Migration applies cleanly
-- [ ] Audit rows verified in integration tests
+Problem Statement:
+Backend needs RESTful API endpoints for creating, reading, updating, and deleting
+user directory entries.
 
-**Source Documentation**: `docs/Architecture/DATABASE.md` §6. listings_audit
+Acceptance Criteria:
+- GET /api/users (list with pagination)
+- GET /api/users/:id (get single user)
+- POST /api/users (create user)
+- PUT /api/users/:id (update user)
+- DELETE /api/users/:id (delete user)
+- Query filtering (department, status)
+- Sorting support
+- Pagination (limit, offset)
+- Rate limiting implemented
+- Input validation on all endpoints
+- Proper error responses
+- API documentation (OpenAPI/Swagger)
+- 85%+ test coverage
 
----
+Definition of Done:
+1. All endpoints responding correctly
+2. Tests passing (unit + integration)
+3. Rate limiting verified
+4. Documentation complete
+5. Security review done
+6. API contract finalized
 
-#### Issue E2-7: Implement `leads` table
+Dependencies: E1-3, E2-1
+Owner: Backend Lead
+```
 
-**Labels**: `type:feature`, `area:database`, `phase:1a-core-infra`, `priority:P0`, `complexity:S`  
-**Milestone**: M1  
-**Depends On**: E2-5
+#### [E3-2] Build User Directory UI Components
 
-**Description**:
-Create leads table for capturing form submissions.
+```
+Title: Build User Directory UI Components
+Labels: type:feature, area:frontend, complexity:medium, priority:critical, phase:planning
+Milestone: M2 - Core Directory Features
+Story Points: 5
 
-**Acceptance Criteria**:
-- [ ] Table includes: listing_id FK, name, email, phone, message, source, status, quality_score
-- [ ] RLS scopes leads via the parent listing's organization
-- [ ] Foreign key cascade behavior verified when a listing is deleted
+Problem Statement:
+Frontend needs reusable components for displaying user directory with pagination,
+filtering, and user cards.
 
-**Definition of Done**:
-- [ ] Migration applies cleanly
-- [ ] FK cascade tested
-- [ ] RLS policies verified
+Acceptance Criteria:
+- UserCard component
+- UserList component with pagination
+- UserFilter component
+- Directory page layout
+- Loading and error states
+- Empty state UI
+- Responsive grid layout
+- Search highlighting
+- Skeleton loaders
+- Accessibility features
+- Component storybook documentation
+- Unit tests for all components
 
-**Source Documentation**: `docs/Architecture/DATABASE.md` §4. leads
+Definition of Done:
+1. All components rendering correctly
+2. Interactions working as designed
+3. Accessibility verified (WCAG 2.1 AA)
+4. Mobile responsive verified
+5. Component tests passing
+6. Storybook entries complete
 
----
+Dependencies: E1-1
+Owner: Frontend Lead
+```
 
-#### Issue E2-8: Implement `analytics_events` table
+#### [E3-3] Connect Directory UI to API
 
-**Labels**: `type:feature`, `area:database`, `phase:1a-core-infra`, `priority:P1`, `complexity:S`  
-**Milestone**: M1  
-**Depends On**: E2-5
+```
+Title: Connect Directory UI to API
+Labels: type:feature, area:frontend, complexity:small, priority:critical, phase:planning
+Milestone: M2 - Core Directory Features
+Story Points: 3
 
-**Description**:
-Create analytics table for tracking user interactions and listing performance.
+Problem Statement:
+Frontend components need to be integrated with backend API, including data fetching,
+error handling, and loading states.
 
-**Acceptance Criteria**:
-- [ ] Table includes: organization_id, event_type (view/click/lead), listing_id, metadata JSON, timestamp
-- [ ] Table can sustain write volume needed for dashboard analytics
-- [ ] Indexes on organization_id, listing_id, timestamp
-- [ ] Insert/read benchmarked against performance targets
+Acceptance Criteria:
+- User list fetched from API
+- Pagination working with API
+- Filtering working with API
+- Search queries sent to backend
+- Error handling for failed requests
+- Loading indicators shown
+- Data caching implemented
+- Refetch functionality
+- Real-time updates (optional WebSocket)
+- E2E tests for full flow
 
-**Definition of Done**:
-- [ ] Migration applies cleanly
-- [ ] Indexes created and verified
-- [ ] Performance benchmarked
+Definition of Done:
+1. Data flowing from API to UI
+2. All user interactions working
+3. Error states handled properly
+4. Loading states showing correctly
+5. E2E tests passing
+6. Performance acceptable
 
-**Source Documentation**: `docs/Architecture/DATABASE.md` §5. analytics_events
+Dependencies: E3-1, E3-2
+Owner: Full-Stack Developer
+```
 
----
+### E4: Department Management
 
-### Epic E3: Authentication & Authorization (5 issues)
+#### [E4-1] Create Department API Endpoints
 
-#### Issue E3-1: Implement signup/login/logout API endpoints
+```
+Title: Create Department API Endpoints
+Labels: type:feature, area:backend, complexity:small, priority:high, phase:planning
+Milestone: M2 - Core Directory Features
+Story Points: 3
 
-**Labels**: `type:feature`, `area:auth`, `phase:1a-core-infra`, `priority:P0`, `complexity:M`  
-**Milestone**: M1  
-**Depends On**: E2-3, E1-2
+Problem Statement:
+Backend needs API endpoints for managing departments (create, read, update, delete,
+list).
 
-**Description**:
-Implement authentication endpoints for user signup, login, and logout.
+Acceptance Criteria:
+- GET /api/departments (list all)
+- GET /api/departments/:id (get single)
+- POST /api/departments (create)
+- PUT /api/departments/:id (update)
+- DELETE /api/departments/:id (delete)
+- Department hierarchy support
+- List users in department
+- Validation rules
+- Error handling
+- Tests for all endpoints
 
-**Acceptance Criteria**:
-- [ ] `POST /api/auth/signup` creates a user + organization and returns access/refresh tokens
-- [ ] `POST /api/auth/login` authenticates and returns tokens
-- [ ] `POST /api/auth/logout` invalidates the session/token
-- [ ] Response shape matches API.md contracts exactly
-- [ ] Passwords are hashed; plaintext passwords never stored or logged
+Definition of Done:
+1. All endpoints working
+2. Tests passing
+3. Validation verified
+4. API documented
 
-**Definition of Done**:
-- [ ] Endpoints match request/response contracts in API.md exactly
-- [ ] Integration tests cover happy path, validation failures, auth failures
-- [ ] Passwords verified hashed (bcrypt)
+Dependencies: E3-1
+Owner: Backend Lead
+```
 
-**Source Documentation**: `docs/Architecture/API.md` §Authentication Endpoints
+#### [E4-2] Build Department Management UI
 
----
+```
+Title: Build Department Management UI
+Labels: type:feature, area:frontend, complexity:small, priority:high, phase:planning
+Milestone: M2 - Core Directory Features
+Story Points: 3
 
-#### Issue E3-2: Implement JWT session management with refresh/token rotation
+Problem Statement:
+Frontend needs UI for viewing and managing departments, including creation, editing,
+and viewing department hierarchy.
 
-**Labels**: `type:feature`, `area:auth`, `phase:1a-core-infra`, `priority:P0`, `complexity:M`  
-**Milestone**: M1  
-**Depends On**: E3-1
+Acceptance Criteria:
+- Department list page
+- Department detail page
+- Create department form
+- Edit department form
+- Hierarchy visualization
+- User count per department
+- Delete with confirmation
+- Mobile responsive
+- Accessible forms
 
-**Description**:
-Implement JWT token refresh and rotation for secure session management.
+Definition of Done:
+1. All pages functional
+2. Forms working correctly
+3. Accessibility verified
+4. Mobile responsive
+5. Tests passing
 
-**Acceptance Criteria**:
-- [ ] `POST /api/auth/refresh` issues a new access token from a valid refresh token
-- [ ] Expired/invalid tokens are rejected with correct status codes
-- [ ] Token rotation invalidates the previous refresh token
-- [ ] Rotation behavior covered by automated test
-
-**Definition of Done**:
-- [ ] Integration tests verify token refresh flow
-- [ ] Token expiry times configurable via env vars
-- [ ] httpOnly cookies used for refresh tokens
-
-**Source Documentation**: `docs/Architecture/API.md` §POST /auth/refresh
-
----
-
-#### Issue E3-3: Implement password reset flow via Resend
-
-**Labels**: `type:feature`, `area:auth`, `phase:1a-core-infra`, `priority:P1`, `complexity:S`  
-**Milestone**: M1  
-**Depends On**: E3-1
-
-**Description**:
-Implement password reset flow using Resend for email delivery.
-
-**Acceptance Criteria**:
-- [ ] Requesting a reset sends an email via Resend with a time-limited reset link/token
-- [ ] Submitting a valid token updates the password
-- [ ] Expired/used tokens are rejected
-- [ ] End-to-end reset flow tested with a test email account
-
-**Definition of Done**:
-- [ ] Resend integration tested
-- [ ] Token expiry times verified (e.g., 1 hour)
-- [ ] Email template renders correctly
-
-**Source Documentation**: `docs/Architecture/API.md` §POST /auth/password-reset
-
----
-
-#### Issue E3-4: Implement RBAC middleware (admin/editor/viewer)
-
-**Labels**: `type:feature`, `area:auth`, `phase:1a-core-infra`, `priority:P0`, `complexity:M`  
-**Milestone**: M1  
-**Depends On**: E3-1, E2-3
-
-**Description**:
-Implement role-based access control middleware to enforce permissions across the API.
-
-**Acceptance Criteria**:
-- [ ] Admin has full access to all organization resources
-- [ ] Editor can manage listings and view analytics but not manage users/billing
-- [ ] Viewer has read-only access
-- [ ] Unauthorized actions return 403 with a clear error
-- [ ] Each role tested against at least one allowed and one disallowed action
-
-**Definition of Done**:
-- [ ] RBAC middleware applies to all protected routes
-- [ ] Role checks verified in integration tests
-- [ ] Permission denied responses standardized
-
-**Source Documentation**: `docs/Product/02_MVP.md` §Role-based access control (RBAC)
-
----
-
-#### Issue E3-5: Implement organization multi-tenancy scoping across API
-
-**Labels**: `type:feature`, `area:auth`, `phase:1a-core-infra`, `priority:P0`, `complexity:M`  
-**Milestone**: M1  
-**Depends On**: E3-4, E2-5
-
-**Description**:
-Implement defense-in-depth tenant isolation across the API layer.
-
-**Acceptance Criteria**:
-- [ ] Every authenticated request resolves the caller's `organization_id`
-- [ ] All data queries are scoped to the caller's organization
-- [ ] Cross-organization data access attempts are blocked and logged
-- [ ] A test proves user A cannot read/write user B's organization data
-
-**Definition of Done**:
-- [ ] Organization scoping enforced at every API route
-- [ ] Cross-org access blocked by both API and RLS policies
-- [ ] Integration tests verify isolation
-
-**Source Documentation**: `docs/Product/02_MVP.md` §Organization multi-tenancy
+Dependencies: E4-1
+Owner: Frontend Lead
+```
 
 ---
 
-## MILESTONE 2: M2 — Listing Management (Weeks 4-6)
+## 🏃 MILESTONE 3: Advanced Search & Filtering (Sprint 3)
 
-**Description**: Listing CRUD operations, dashboard, and bulk import/export.
+### E5: Search & Discovery
 
-**Issues**: 12 total  
-**Epics Covered**: E4 (Listing CRUD & Dashboard), E5 (Bulk Import/Export)  
-**Exit Criteria**: Users can CRUD, search, filter, bulk import/export 1,000+ listings  
-**Depends On**: M1 complete
+#### [E5-1] Implement Full-Text Search
 
----
+```
+Title: Implement Full-Text Search
+Labels: type:feature, area:backend, complexity:medium, priority:high, phase:planning
+Milestone: M3 - Advanced Search & Filtering
+Story Points: 5
 
-### Epic E4: Listing Management (8 issues)
+Problem Statement:
+Users need efficient full-text search across user directory to find people by name,
+email, department, phone, etc.
 
-#### Issue E4-1: Implement Listings CRUD API endpoints
+Acceptance Criteria:
+- Full-text search on names, emails
+- Search by phone number
+- Search by department
+- Search by job title
+- Fuzzy matching support
+- Search highlighting
+- Search suggestions/autocomplete
+- Performance optimized (< 200ms)
+- Indexed database queries
+- Search analytics tracking
+- Tests with various search terms
 
-**Labels**: `type:feature`, `area:listings`, `phase:1b-listings`, `priority:P0`, `complexity:L`  
-**Milestone**: M2  
-**Depends On**: E2-5, E3-5
+Definition of Done:
+1. Search working across all fields
+2. Performance benchmarks met
+3. Database indexes optimized
+4. Tests covering edge cases
+5. Search quality verified
 
-**Description**:
-Implement complete CRUD API for listing management.
+Dependencies: E3-1, E1-3
+Owner: Backend Lead
+```
 
-**Acceptance Criteria**:
-- [ ] `GET /api/listings` supports pagination and filtering (status, category, search)
-- [ ] `POST /api/listings` creates a listing with validation on required fields
-- [ ] `GET /api/listings/:id` returns a single listing
-- [ ] `PATCH /api/listings/:id` updates a listing and writes an audit row
-- [ ] `DELETE /api/listings/:id` performs a soft delete (status change, not row removal)
-- [ ] All five endpoints covered by integration tests
-- [ ] All endpoints match API.md contracts
+#### [E5-2] Build Advanced Filter UI
 
-**Definition of Done**:
-- [ ] All five endpoints pass integration tests
-- [ ] Pagination verified with 1,000+ listings
-- [ ] Audit rows created on mutations
-- [ ] RLS verified to block cross-org access
+```
+Title: Build Advanced Filter UI
+Labels: type:feature, area:frontend, complexity:medium, priority:high, phase:planning
+Milestone: M3 - Advanced Search & Filtering
+Story Points: 4
 
-**Source Documentation**: `docs/Architecture/API.md` §Listings
+Problem Statement:
+Users need an intuitive interface for filtering the directory by multiple criteria
+simultaneously (department, status, location, etc.).
 
----
+Acceptance Criteria:
+- Multi-select department filter
+- Status filter (active/inactive)
+- Location filter
+- Date range filters
+- Filter chips/tags
+- Clear all filters button
+- Save filter presets
+- URL-based filter state
+- Filter reset button
+- Mobile-friendly filter UI
+- Component tests
 
-#### Issue E4-2: Build listing dashboard table view (search, filter, sort, pagination)
+Definition of Done:
+1. Filters working correctly
+2. State persisting in URL
+3. Mobile responsive
+4. Accessibility verified
+5. Tests passing
 
-**Labels**: `type:feature`, `area:listings`, `phase:1b-listings`, `priority:P0`, `complexity:L`  
-**Milestone**: M2  
-**Depends On**: E4-1
+Dependencies: E3-2
+Owner: Frontend Lead
+```
 
-**Description**:
-Build the listing dashboard UI with search, filter, sort, and pagination.
+#### [E5-3] Create Search Results Page
 
-**Acceptance Criteria**:
-- [ ] Table displays all organization listings with search by name/category/status
-- [ ] Sorting by date, name, and lead count works
-- [ ] Pagination performs correctly at 1,000+ listings without UI slowdown
-- [ ] Search response < 500ms per performance targets
-- [ ] Quick stats (total, active, pending, archived) shown
-- [ ] Manual/automated test confirms search response under 500ms with 1,000 listings
+```
+Title: Create Search Results Page
+Labels: type:feature, area:frontend, complexity:small, priority:high, phase:planning
+Milestone: M3 - Advanced Search & Filtering
+Story Points: 3
 
-**Definition of Done**:
-- [ ] Dashboard loads in < 1s
-- [ ] Search/filter/sort all working
-- [ ] Pagination tested at 1,000+ listings
-- [ ] Responsive design verified
+Problem Statement:
+Frontend needs a dedicated search results page with highlighted matches, sorting
+options, and result counts.
 
-**Source Documentation**: `docs/Product/02_MVP.md` §Phase 1B #1
+Acceptance Criteria:
+- Display search results
+- Show matched fields highlighted
+- Sort options (relevance, name, date)
+- Result count display
+- No results messaging
+- Pagination of results
+- Quick filters on results
+- Results metadata (updated date)
+- Mobile responsive
 
----
+Definition of Done:
+1. Page functional
+2. Results displaying correctly
+3. Sorting working
+4. Mobile responsive
+5. Tests passing
 
-#### Issue E4-3: Implement bulk actions on listing dashboard
+Dependencies: E5-1, E5-2
+Owner: Frontend Lead
+```
 
-**Labels**: `type:feature`, `area:listings`, `phase:1b-listings`, `priority:P1`, `complexity:M`  
-**Milestone**: M2  
-**Depends On**: E4-2
+### E6: Advanced Features
 
-**Description**:
-Add bulk operations (status change, delete) to the listing dashboard.
+#### [E6-1] Implement User Roles & Permissions
 
-**Acceptance Criteria**:
-- [ ] Users can select multiple listings via checkboxes
-- [ ] Bulk operations (status change, delete) are available
-- [ ] Bulk actions respect RBAC (Viewer cannot perform them)
-- [ ] Bulk action tested against 10+ selected rows
+```
+Title: Implement User Roles & Permissions
+Labels: type:feature, area:backend, complexity:medium, priority:high, phase:planning
+Milestone: M3 - Advanced Search & Filtering
+Story Points: 5
 
-**Definition of Done**:
-- [ ] Bulk actions working for status change and delete
-- [ ] RBAC verified to block Viewer from bulk actions
-- [ ] Integration tests cover bulk operations
+Problem Statement:
+System needs role-based access control (RBAC) with Admin, Manager, User roles
+with different permissions for viewing/editing user data.
 
-**Source Documentation**: `docs/Product/02_MVP.md` §Phase 1B #1
+Acceptance Criteria:
+- Role definitions (Admin, Manager, User)
+- Permission matrix
+- Row-level security (RLS) in database
+- API authorization checks
+- Permission middleware
+- Admin can manage users
+- Managers can view/edit team
+- Users can only view own profile
+- Audit logging for permission changes
+- Tests for each role scenario
 
----
+Definition of Done:
+1. Roles working correctly
+2. Permissions enforced
+3. RLS policies active
+4. Audit logs recording
+5. Tests covering all roles
 
-#### Issue E4-4: Build create/edit listing form with validation
+Dependencies: E2-1, E1-3
+Owner: Backend Lead
+```
 
-**Labels**: `type:feature`, `area:listings`, `phase:1b-listings`, `priority:P0`, `complexity:L`  
-**Milestone**: M2  
-**Depends On**: E4-1, E2-4
+#### [E6-2] Add Bulk User Operations
 
-**Description**:
-Build the listing creation and editing form with comprehensive validation.
+```
+Title: Add Bulk User Operations
+Labels: type:feature, area:backend, complexity:medium, priority:normal, phase:planning
+Milestone: M3 - Advanced Search & Filtering
+Story Points: 4
 
-**Acceptance Criteria**:
-- [ ] Form includes all MVP fields: name, category (multi-select), description, phone, email, website, address, hours, images, social links
-- [ ] Client and server-side validation enforce required fields and formats
-- [ ] Rich text editor available for description field
-- [ ] Invalid submissions blocked with field-level error messages
+Problem Statement:
+Admins need ability to perform bulk operations on multiple users (update, delete, export)
+to improve efficiency.
 
-**Definition of Done**:
-- [ ] Form validation working client and server-side
-- [ ] Error messages clear and actionable
-- [ ] Rich text editor rendering correctly
-- [ ] Form accessible (WCAG AA)
+Acceptance Criteria:
+- Bulk update endpoint
+- Bulk delete with confirmation
+- Bulk export to CSV
+- Progress tracking
+- Batch operation queueing
+- Operation history
+- Error handling per item
+- Maximum batch size enforced
+- Audit logging for bulk ops
 
-**Source Documentation**: `docs/Product/02_MVP.md` §Phase 1B #2
+Definition of Done:
+1. Bulk operations working
+2. Progress tracking accurate
+3. Error handling robust
+4. Tests passing
+5. Audit logs recording
 
----
-
-#### Issue E4-5: Implement Mapbox address autocomplete
-
-**Labels**: `type:feature`, `area:listings`, `phase:1b-listings`, `priority:P1`, `complexity:M`  
-**Milestone**: M2  
-**Depends On**: E4-4
-
-**Description**:
-Integrate Mapbox address autocomplete for easy location entry.
-
-**Acceptance Criteria**:
-- [ ] Address field suggests results via Mapbox as the user types
-- [ ] Selecting a suggestion populates address, latitude, and longitude
-- [ ] Manual address entry remains possible if Mapbox is unavailable
-- [ ] Latitude/longitude verified to persist correctly
-
-**Definition of Done**:
-- [ ] Mapbox integration tested
-- [ ] Geolocation data persisted and retrievable
-- [ ] Fallback for manual entry working
-
-**Source Documentation**: `docs/Product/02_MVP.md` §Phase 1B #2
-
----
-
-#### Issue E4-6: Implement image upload gallery via Supabase Storage
-
-**Labels**: `type:feature`, `area:listings`, `phase:1b-listings`, `priority:P1`, `complexity:M`  
-**Milestone**: M2  
-**Depends On**: E4-4, E1-2
-
-**Description**:
-Implement image upload and gallery for listings.
-
-**Acceptance Criteria**:
-- [ ] Users can upload multiple images per listing
-- [ ] Images can be reordered via drag-to-reorder
-- [ ] Images are stored in Supabase Storage and referenced by URL
-- [ ] Upload size/type validated and rejected gracefully when invalid
-
-**Definition of Done**:
-- [ ] Image upload working end-to-end
-- [ ] Images persistent in Supabase Storage
-- [ ] Drag-to-reorder functioning
-- [ ] File validation preventing uploads of wrong type/size
-
-**Source Documentation**: `docs/Product/02_MVP.md` §Phase 1B #2
-
----
-
-#### Issue E4-7: Implement auto-save draft protection
-
-**Labels**: `type:feature`, `area:listings`, `phase:1b-listings`, `priority:P2`, `complexity:S`  
-**Milestone**: M2  
-**Depends On**: E4-4
-
-**Description**:
-Implement auto-save functionality to protect form drafts.
-
-**Acceptance Criteria**:
-- [ ] Form changes are periodically saved as a draft without explicit user action
-- [ ] Reloading the page recovers the last auto-saved draft
-- [ ] Draft recovery verified after a simulated page reload
-
-**Definition of Done**:
-- [ ] Auto-save working without blocking UI
-- [ ] Draft recovery tested
-- [ ] Stale drafts handled appropriately
-
-**Source Documentation**: `docs/Product/02_MVP.md` §Phase 1B #2
+Dependencies: E3-1, E6-1
+Owner: Backend Lead
+```
 
 ---
 
-#### Issue E4-8: Implement listing preview mode
+## 🏃 MILESTONE 4: Admin & Notifications (Sprint 4)
 
-**Labels**: `type:feature`, `area:listings`, `phase:1b-listings`, `priority:P2`, `complexity:S`  
-**Milestone**: M2  
-**Depends On**: E4-4
+### E7: Admin Dashboard & Management
 
-**Description**:
-Implement preview mode to show how listings will appear before publishing.
+#### [E7-1] Create Admin Dashboard
 
-**Acceptance Criteria**:
-- [ ] Users can preview how a listing will appear before publishing
-- [ ] Preview reflects current unsaved form state
-- [ ] Preview verified to match published output
+```
+Title: Create Admin Dashboard
+Labels: type:feature, area:frontend, complexity:medium, priority:high, phase:planning
+Milestone: M4 - Admin & Notifications
+Story Points: 5
 
-**Definition of Done**:
-- [ ] Preview rendering correctly
-- [ ] Preview reflecting unsaved changes
-- [ ] Published output matches preview
+Problem Statement:
+Admins need a dashboard showing system statistics, recent activities, user management
+quick actions, and system health.
 
-**Source Documentation**: `docs/Product/02_MVP.md` §Phase 1B #2
+Acceptance Criteria:
+- Dashboard layout with widgets
+- User statistics (total, active, inactive)
+- Recent activities timeline
+- Quick action buttons
+- System health indicators
+- Recent signups widget
+- Activity chart (30-day)
+- Top departments widget
+- Search bar in header
+- Responsive layout
 
----
+Definition of Done:
+1. Dashboard displaying correctly
+2. All widgets loading data
+3. Statistics accurate
+4. Mobile responsive
+5. Tests passing
 
-### Epic E5: Bulk Import & Export (4 issues)
+Dependencies: E6-1
+Owner: Frontend Lead
+```
 
-#### Issue E5-1: Implement CSV bulk import upload + mapping wizard
+#### [E7-2] Build User Management Panel
 
-**Labels**: `type:feature`, `area:import-export`, `phase:1b-listings`, `priority:P0`, `complexity:L`  
-**Milestone**: M2  
-**Depends On**: E4-1
+```
+Title: Build User Management Panel
+Labels: type:feature, area:frontend, complexity:medium, priority:high, phase:planning
+Milestone: M4 - Admin & Notifications
+Story Points: 5
 
-**Description**:
-Implement CSV bulk import with column mapping and validation.
+Problem Statement:
+Admins need a dedicated panel for managing all users including filtering, searching,
+bulk actions, and user status management.
 
-**Acceptance Criteria**:
-- [ ] Users can upload a CSV file
-- [ ] A mapping wizard matches CSV columns to listing fields, with auto-detection
-- [ ] Uploaded data is validated before import (required fields, formats)
-- [ ] A sample CSV of 100 rows imports correctly end-to-end
+Acceptance Criteria:
+- User table with sorting
+- Multi-select checkboxes
+- Bulk action buttons (delete, export, deactivate)
+- User status toggle (active/inactive)
+- User detail modal/drawer
+- Edit user form
+- Quick filters
+- Export as CSV
+- Confirm actions with modal
+- Show last login info
 
-**Definition of Done**:
-- [ ] Import flow working end-to-end
-- [ ] Column mapping wizard functional
-- [ ] Validation catching errors
-- [ ] Test CSV imported successfully
+Definition of Done:
+1. Panel fully functional
+2. Bulk actions working
+3. Filters working
+4. Mobile responsive
+5. Tests passing
 
-**Source Documentation**: `docs/Product/02_MVP.md` §Phase 1B #3
+Dependencies: E6-1, E3-2
+Owner: Frontend Lead
+```
 
----
+#### [E7-3] Implement Activity Logging & Audit Trail
 
-#### Issue E5-2: Implement duplicate detection during import
+```
+Title: Implement Activity Logging & Audit Trail
+Labels: type:feature, area:backend, complexity:medium, priority:high, phase:planning
+Milestone: M4 - Admin & Notifications
+Story Points: 4
 
-**Labels**: `type:feature`, `area:import-export`, `phase:1b-listings`, `priority:P1`, `complexity:M`  
-**Milestone**: M2  
-**Depends On**: E5-1
+Problem Statement:
+System needs comprehensive audit logging of all user actions for compliance and
+debugging purposes.
 
-**Description**:
-Implement duplicate detection to prevent duplicate listing creation during imports.
+Acceptance Criteria:
+- Log all API calls
+- Log user login/logout
+- Log data changes (user created/updated/deleted)
+- Log access to sensitive data
+- Log permission changes
+- Timestamps and user tracking
+- Searchable audit trail
+- Retention policy (90 days default)
+- Export audit logs
+- API endpoints for viewing logs
 
-**Acceptance Criteria**:
-- [ ] Rows matching existing listings (by name+address or configured key) are flagged
-- [ ] User can choose to skip, merge, or create duplicates during import review
-- [ ] Test dataset with intentional duplicates verified to be flagged correctly
+Definition of Done:
+1. Logging active on all actions
+2. Logs persisting correctly
+3. API working for viewing logs
+4. Retention policy enforced
+5. Tests passing
 
-**Definition of Done**:
-- [ ] Duplicate detection working
-- [ ] User options for handling duplicates functional
-- [ ] Integration tests cover duplicate scenarios
+Dependencies: E2-1, E6-1
+Owner: Backend Lead
+```
 
-**Source Documentation**: `docs/Product/02_MVP.md` §Phase 1B #3
+### E8: Notifications & Communication
 
----
+#### [E8-1] Set Up Email Notifications
 
-#### Issue E5-3: Implement import progress tracking, error reporting, and rollback
+```
+Title: Set Up Email Notifications
+Labels: type:feature, area:backend, complexity:medium, priority:normal, phase:planning
+Milestone: M4 - Admin & Notifications
+Story Points: 4
 
-**Labels**: `type:feature`, `area:import-export`, `phase:1b-listings`, `priority:P0`, `complexity:L`  
-**Milestone**: M2  
-**Depends On**: E5-1
+Problem Statement:
+System needs email notification system for alerts, password resets, and user actions.
 
-**Description**:
-Implement real-time progress tracking, error reporting, and rollback capability for imports.
+Acceptance Criteria:
+- Email service integration (SendGrid or similar)
+- Welcome email on signup
+- Password reset email
+- Email templates created
+- Email verification
+- Unsubscribe option
+- HTML and text emails
+- Error handling and retry logic
+- Email queue for async sending
+- Tests for email service
 
-**Acceptance Criteria**:
-- [ ] Import shows real-time progress status
-- [ ] Row-level errors are reported in a downloadable/viewable log
-- [ ] A completed import can be rolled back, removing/reverting the imported rows
-- [ ] Import of 10,000+ rows completes reliably per Success Criteria
-- [ ] Rollback fully reverts a test import with zero orphaned records
+Definition of Done:
+1. Email service working
+2. All emails sending correctly
+3. Templates formatted properly
+4. Queue system functional
+5. Tests passing
 
-**Definition of Done**:
-- [ ] Progress tracking showing real-time updates
-- [ ] Error log downloadable and clear
-- [ ] Rollback tested and verified complete
-- [ ] 10,000+ row import tested
+Dependencies: E2-1
+Owner: Backend Lead
+```
 
-**Source Documentation**: `docs/Product/02_MVP.md` §Phase 1B #3
+#### [E8-2] Create Notification Center UI
 
----
+```
+Title: Create Notification Center UI
+Labels: type:feature, area:frontend, complexity:medium, priority:normal, phase:planning
+Milestone: M4 - Admin & Notifications
+Story Points: 3
 
-#### Issue E5-4: Implement CSV bulk export
+Problem Statement:
+Users need a notification center showing in-app notifications with mark as read,
+delete, and notification history.
 
-**Labels**: `type:feature`, `area:import-export`, `phase:1b-listings`, `priority:P1`, `complexity:S`  
-**Milestone**: M2  
-**Depends On**: E4-1
+Acceptance Criteria:
+- Notification bell icon in header
+- Dropdown showing recent notifications
+- Unread badge count
+- Mark as read functionality
+- Delete notification
+- Notification history page
+- Filter by type
+- Notification settings/preferences
+- Real-time notifications (WebSocket)
+- Mobile responsive
 
-**Description**:
-Implement CSV export of listings with audit trail.
+Definition of Done:
+1. UI working correctly
+2. Mark as read working
+3. History persisting
+4. Mobile responsive
+5. Tests passing
 
-**Acceptance Criteria**:
-- [ ] Users can export all listings or a filtered subset to CSV
-- [ ] Export is Excel-compatible
-- [ ] Export includes an audit trail entry (timestamp, user, action)
-- [ ] Exported file verified to open correctly in Excel/Google Sheets
-
-**Definition of Done**:
-- [ ] Export functionality working
-- [ ] CSV format correct and Excel-compatible
-- [ ] Audit trail entry created
-
-**Source Documentation**: `docs/Product/02_MVP.md` §Phase 1B #4
-
----
-
-## MILESTONE 3: M3 — AI Features (Weeks 7-9)
-
-**Description**: AI-powered description generation, SEO analysis, and content scoring.
-
-**Issues**: 4 total  
-**Epics Covered**: E6 (AI Integration)  
-**Exit Criteria**: AI endpoints working, generation <2s, human review enforced  
-**Depends On**: M2 complete
-
----
-
-### Epic E6: AI Integration (4 issues)
-
-#### Issue E6-1: Integrate Claude API for single-listing description generation
-
-**Labels**: `type:feature`, `area:ai`, `phase:1c-ai`, `priority:P0`, `complexity:M`  
-**Milestone**: M3  
-**Depends On**: E4-1
-
-**Description**:
-Integrate Claude API for AI-powered listing description generation.
-
-**Acceptance Criteria**:
-- [ ] `POST /api/ai/generate-description` calls Claude with prompts based on category, existing description, and SEO keywords
-- [ ] Generation completes in < 2s per performance targets
-- [ ] Generated content requires human review before publishing (not auto-published)
-- [ ] Generation latency measured and logged against the 2s target
-
-**Definition of Done**:
-- [ ] Claude API integrated
-- [ ] Performance benchmarked
-- [ ] Human review workflow enforced
-- [ ] Integration tests cover happy path and error cases
-
-**Source Documentation**: `docs/Product/02_MVP.md` §Phase 1C #1
-
----
-
-#### Issue E6-2: Implement bulk AI description generation with rate limiting and version history
-
-**Labels**: `type:feature`, `area:ai`, `phase:1c-ai`, `priority:P1`, `complexity:L`  
-**Milestone**: M3  
-**Depends On**: E6-1
-
-**Description**:
-Implement bulk generation with rate limiting and version history.
-
-**Acceptance Criteria**:
-- [ ] Users can trigger AI generation across multiple selected listings
-- [ ] Requests are rate-limited to avoid API throttling/cost overrun
-- [ ] Previous descriptions are retained and viewable as version history
-- [ ] Rate limiter verified to reject/queue requests beyond threshold
-
-**Definition of Done**:
-- [ ] Bulk generation working
-- [ ] Rate limiting enforced
-- [ ] Version history persisting
-- [ ] Integration tests cover bulk scenarios
-
-**Source Documentation**: `docs/Product/02_MVP.md` §Phase 1C #1
+Dependencies: E1-1
+Owner: Frontend Lead
+```
 
 ---
 
-#### Issue E6-3: Implement SEO analysis engine
+## 🏃 MILESTONE 5: Optimization & Polish (Sprint 5)
 
-**Labels**: `type:feature`, `area:ai`, `phase:1c-ai`, `priority:P0`, `complexity:M`  
-**Milestone**: M3  
-**Depends On**: E4-1
+#### [M5-1] Performance Optimization
 
-**Description**:
-Implement SEO analysis covering title, keywords, descriptions, and readability.
+```
+Title: Performance Optimization
+Labels: type:chore, area:frontend, complexity:medium, priority:normal, phase:planning
+Milestone: M5 - Optimization & Polish
+Story Points: 5
 
-**Acceptance Criteria**:
-- [ ] Analysis covers title length/keywords, meta description, keyword density, and Flesch-Kincaid readability score
-- [ ] Output includes actionable suggestions, not only numeric scores
-- [ ] Batch SEO audit can run across all organization listings
-- [ ] Output verified against known-good and known-bad listing samples
+Problem Statement:
+Application needs performance optimization including code splitting, lazy loading,
+image optimization, and caching strategies.
 
-**Definition of Done**:
-- [ ] SEO analysis working
-- [ ] Actionable suggestions generated
-- [ ] Batch audit functional
-- [ ] Integration tests cover various content scenarios
+Acceptance Criteria:
+- Lighthouse score 90+
+- First Contentful Paint < 1.5s
+- Largest Contentful Paint < 2.5s
+- Code splitting implemented
+- Image optimization (next/image)
+- Bundle size analysis
+- Caching strategy (HTTP headers)
+- Service worker for PWA
+- Minification and tree-shaking
+- Performance budget enforced
 
-**Source Documentation**: `docs/Product/02_MVP.md` §Phase 1C #2
+Definition of Done:
+1. Lighthouse scores verified
+2. Core metrics met
+3. Bundle size reduced
+4. Tests passing
 
----
+Dependencies: E3-2, E5-1
+Owner: Frontend Lead
+```
 
-#### Issue E6-4: Implement content quality scoring
+#### [M5-2] Security Hardening
 
-**Labels**: `type:feature`, `area:ai`, `phase:1c-ai`, `priority:P1`, `complexity:M`  
-**Milestone**: M3  
-**Depends On**: E4-1
+```
+Title: Security Hardening
+Labels: type:feature, area:security, complexity:medium, priority:critical, phase:planning
+Milestone: M5 - Optimization & Polish
+Story Points: 5
 
-**Description**:
-Implement content completeness and quality scoring.
+Problem Statement:
+Application needs security enhancements including CSRF protection, XSS prevention,
+rate limiting, and security headers.
 
-**Acceptance Criteria**:
-- [ ] Score reflects completeness (required fields filled), image quality (min dimensions/format), description length, and category appropriateness
-- [ ] `POST /api/ai/content-score` returns a score and the contributing factors
-- [ ] Scoring logic unit-tested for each contributing factor independently
+Acceptance Criteria:
+- CSRF tokens implemented
+- XSS protection verified
+- Rate limiting enforced
+- Security headers (CSP, HSTS, etc.)
+- HTTPS enforced
+- Input validation on all fields
+- SQL injection protection
+- Dependency vulnerability scanning
+- Security audit completed
+- Documentation of security measures
 
-**Definition of Done**:
-- [ ] Content scoring working
-- [ ] Factors breakdown clear
-- [ ] Unit tests cover each factor
-- [ ] Integration tests verify end-to-end scoring
+Definition of Done:
+1. Security scan passing
+2. No vulnerabilities found
+3. Headers configured
+4. Rate limiting working
+5. Tests passing
 
-**Source Documentation**: `docs/Product/02_MVP.md` §Phase 1C #3
+Dependencies: All
+Owner: Security Lead
+```
 
----
+#### [M5-3] Documentation & Deployment
 
-## MILESTONE 4: M4 — Analytics (Weeks 10-11)
+```
+Title: Documentation & Deployment
+Labels: type:docs, area:devops, complexity:medium, priority:normal, phase:planning
+Milestone: M5 - Optimization & Polish
+Story Points: 4
 
-**Description**: Analytics API and dashboards.
+Problem Statement:
+Project needs comprehensive documentation and deployment guide for production launch.
 
-**Issues**: 5 total  
-**Epics Covered**: E7 (Analytics & Reporting)  
-**Exit Criteria**: Dashboards load <1s, metrics display real data  
-**Depends On**: M1 (Database), M2 (Listing data)
+Acceptance Criteria:
+- API documentation (OpenAPI/Swagger)
+- User guide documentation
+- Admin guide documentation
+- Deployment guide
+- Troubleshooting guide
+- Architecture documentation updated
+- Environment setup guide
+- Database migration guide
+- Monitoring setup
+- Disaster recovery plan
 
----
+Definition of Done:
+1. All docs written and reviewed
+2. Deployment guide tested
+3. Team trained
+4. Ready for production
 
-### Epic E7: Analytics & Dashboard (5 issues)
-
-#### Issue E7-1: Implement Analytics API endpoints
-
-**Labels**: `type:feature`, `area:analytics`, `phase:1d-analytics`, `priority:P0`, `complexity:L`  
-**Milestone**: M4  
-**Depends On**: E2-8, E4-1
-
-**Description**:
-Implement all documented analytics API endpoints.
-
-**Acceptance Criteria**:
-- [ ] All four documented endpoints implemented and return data matching API.md shapes
-  - GET /analytics/dashboard
-  - GET /analytics/listing/:id
-  - GET /analytics/search-terms
-  - GET /analytics/report
-- [ ] Endpoints are scoped to the caller's organization
-- [ ] Dashboard endpoint responds in < 1s per performance targets
-- [ ] Response times measured against 1s target with realistic seeded data
-
-**Definition of Done**:
-- [ ] All four endpoints implemented
-- [ ] Performance benchmarked
-- [ ] Integration tests cover all endpoints
-- [ ] RLS verified to block cross-org access
-
-**Source Documentation**: `docs/Architecture/API.md` §Analytics
-
----
-
-#### Issue E7-2: Build overview dashboard (key metrics, recent activity feed)
-
-**Labels**: `type:feature`, `area:analytics`, `phase:1d-analytics`, `priority:P0`, `complexity:M`  
-**Milestone**: M4  
-**Depends On**: E7-1
-
-**Description**:
-Build the overview dashboard with key metrics and activity feed.
-
-**Acceptance Criteria**:
-- [ ] Displays total listings, total leads, average lead quality score, content completion %, and month-over-month trends
-- [ ] Shows quick actions (create listing, import, view analytics)
-- [ ] Shows a recent activity feed of the last 10 changes
-- [ ] Dashboard loads in < 1s with 1,000 seeded listings
-
-**Definition of Done**:
-- [ ] Dashboard rendering correctly
-- [ ] Metrics accurate and real-time
-- [ ] Activity feed showing correct data
-- [ ] Performance verified < 1s
-
-**Source Documentation**: `docs/Product/02_MVP.md` §Phase 1D #1
+Dependencies: All
+Owner: Tech Lead
+```
 
 ---
 
-#### Issue E7-3: Build listing analytics view
+## 📊 Issue Summary
 
-**Labels**: `type:feature`, `area:analytics`, `phase:1d-analytics`, `priority:P0`, `complexity:M`  
-**Milestone**: M4  
-**Depends On**: E7-1
-
-**Description**:
-Build per-listing analytics dashboard.
-
-**Acceptance Criteria**:
-- [ ] Shows view count, click-through rate, lead capture count, time-to-first-lead, device breakdown, and traffic source per listing
-- [ ] Each metric verified against seeded analytics_events data
-
-**Definition of Done**:
-- [ ] Listing analytics view working
-- [ ] Metrics accurate
-- [ ] Integration tests verify metrics
-
-**Source Documentation**: `docs/Product/02_MVP.md` §Phase 1D #2
+| Epic | Title | Issues | Points |
+|------|-------|--------|--------|
+| E1 | Project Initialization | 3 | 7 |
+| E2 | Authentication | 3 | 13 |
+| E3 | Directory Management | 3 | 13 |
+| E4 | Department Management | 2 | 6 |
+| E5 | Search & Discovery | 3 | 12 |
+| E6 | Advanced Features | 2 | 9 |
+| E7 | Admin Dashboard | 3 | 14 |
+| E8 | Notifications | 2 | 7 |
+| | **TOTAL** | **21** | **81** |
 
 ---
 
-#### Issue E7-4: Build search analytics view
+## 🏷️ Label Reference
 
-**Labels**: `type:feature`, `area:analytics`, `phase:1d-analytics`, `priority:P1`, `complexity:M`  
-**Milestone**: M4  
-**Depends On**: E7-1
+### Type Labels
+- `type:feature` - New feature
+- `type:bug` - Bug fix
+- `type:docs` - Documentation
+- `type:chore` - Maintenance/setup
 
-**Description**:
-Build search keyword and performance analytics.
+### Area Labels
+- `area:frontend` - React/Next.js
+- `area:backend` - Node/API
+- `area:database` - PostgreSQL/Supabase
+- `area:devops` - Infrastructure
+- `area:security` - Security concerns
 
-**Acceptance Criteria**:
-- [ ] Shows search keywords leading to listings, average search position, impression count, and local/map view performance
-- [ ] Metrics verified against seeded analytics_events data
+### Complexity Labels
+- `complexity:small` - 1-3 story points
+- `complexity:medium` - 4-5 story points
+- `complexity:large` - 6+ story points
 
-**Definition of Done**:
-- [ ] Search analytics view working
-- [ ] Metrics accurate
-- [ ] Integration tests verify metrics
+### Priority Labels
+- `priority:critical` - Must do this sprint
+- `priority:high` - Important, schedule soon
+- `priority:normal` - Regular priority
+- `priority:low` - Nice to have
 
-**Source Documentation**: `docs/Product/02_MVP.md` §Phase 1D #3
-
----
-
-#### Issue E7-5: Build reports (monthly PDF, custom date ranges, comparisons, export)
-
-**Labels**: `type:feature`, `area:analytics`, `phase:1d-analytics`, `priority:P1`, `complexity:L`  
-**Milestone**: M4  
-**Depends On**: E7-1
-
-**Description**:
-Build comprehensive reporting with PDF generation.
-
-**Acceptance Criteria**:
-- [ ] Monthly reports downloadable as PDF
-- [ ] Custom date ranges selectable via date picker
-- [ ] Month-over-month comparison view available
-- [ ] Data exportable for further analysis
-- [ ] Generated PDF verified to render correctly and match on-screen data
-
-**Definition of Done**:
-- [ ] Report generation working
-- [ ] PDF rendering correctly
-- [ ] Custom date ranges functional
-- [ ] Comparisons accurate
-
-**Source Documentation**: `docs/Product/02_MVP.md` §Phase 1D #4
+### Phase Labels
+- `phase:planning` - Not started
+- `phase:active` - In progress
+- `phase:review` - In code review
+- `phase:complete` - Done
 
 ---
 
-## MILESTONE 5: M5 — Lead Management (Weeks 11-12)
-
-**Description**: Lead capture, management, and notifications.
-
-**Issues**: 4 total  
-**Epics Covered**: E8 (Lead Capture & Management)  
-**Exit Criteria**: Leads captured, managed, exported; notifications working  
-**Depends On**: M1 (Auth), M2 (Listings), M4 (Analytics)
-
----
-
-### Epic E8: Lead Capture & Management (4 issues)
-
-#### Issue E8-1: Implement Leads API endpoints
-
-**Labels**: `type:feature`, `area:leads`, `phase:1e-leads`, `priority:P0`, `complexity:M`  
-**Milestone**: M5  
-**Depends On**: E2-7, E4-1
-
-**Description**:
-Implement all lead management API endpoints.
-
-**Acceptance Criteria**:
-- [ ] `GET /api/leads` returns paginated leads scoped to the organization
-- [ ] `POST /api/leads` captures a lead from a public form submission
-- [ ] `PATCH /api/leads/:id` updates lead status
-- [ ] `GET /api/leads/export` returns a CSV export
-- [ ] Endpoints match API.md contracts and are covered by integration tests
-
-**Definition of Done**:
-- [ ] All four endpoints implemented
-- [ ] Integration tests cover all endpoints
-- [ ] RLS verified to block cross-org access
-- [ ] Error handling standardized
-
-**Source Documentation**: `docs/Architecture/API.md` §Leads
-
----
-
-#### Issue E8-2: Build embedded lead capture form with spam protection
-
-**Labels**: `type:feature`, `area:leads`, `phase:1e-leads`, `priority:P0`, `complexity:M`  
-**Milestone**: M5  
-**Depends On**: E8-1
-
-**Description**:
-Build embedded lead capture form with spam protection.
-
-**Acceptance Criteria**:
-- [ ] Form embedded on listing pages with fields: name, email, phone, message, optional custom fields
-- [ ] reCAPTCHA (or equivalent) blocks spam submissions
-- [ ] Optional double opt-in supported
-- [ ] Spam-protection verified to reject a scripted/automated submission attempt
-
-**Definition of Done**:
-- [ ] Form rendering correctly
-- [ ] Spam protection working
-- [ ] Form submissions captured
-- [ ] Integration tests cover form submission
-
-**Source Documentation**: `docs/Product/02_MVP.md` §Phase 1E #1
-
----
-
-#### Issue E8-3: Build lead management list (status, quality score, export, bulk actions)
-
-**Labels**: `type:feature`, `area:leads`, `phase:1e-leads`, `priority:P0`, `complexity:M`  
-**Milestone**: M5  
-**Depends On**: E8-1
-
-**Description**:
-Build lead management interface.
-
-**Acceptance Criteria**:
-- [ ] List shows all captured leads with status (new/contacted/converted/lost) and automated quality score
-- [ ] Leads exportable to CSV
-- [ ] Bulk actions available (mark as contacted, delete)
-- [ ] Bulk action and export verified against a seeded set of 20+ leads
-
-**Definition of Done**:
-- [ ] Lead list rendering correctly
-- [ ] Status updates working
-- [ ] Export functional
-- [ ] Bulk actions tested
-
-**Source Documentation**: `docs/Product/02_MVP.md` §Phase 1E #2
-
----
-
-#### Issue E8-4: Implement lead notifications (email alert, in-app, digest)
-
-**Labels**: `type:feature`, `area:leads`, `phase:1e-leads`, `priority:P1`, `complexity:M`  
-**Milestone**: M5  
-**Depends On**: E8-1, E1-2
-
-**Description**:
-Implement multi-channel lead notifications.
-
-**Acceptance Criteria**:
-- [ ] New lead triggers an email alert via Resend
-- [ ] In-app bell icon notification appears for new leads
-- [ ] Daily digest email summarizes new leads
-- [ ] All three notification channels verified to fire on a test lead submission
-
-**Definition of Done**:
-- [ ] Email notifications working
-- [ ] In-app notifications displaying
-- [ ] Digest emails generating
-- [ ] Integration tests cover all notification channels
-
-**Source Documentation**: `docs/Product/02_MVP.md` §Phase 1E #3
-
----
-
-## Summary
-
-**Total Issues**: 43  
-**Total Milestones**: 5  
-**Total Epics**: 8  
-**Expected Duration**: 12 weeks (3 months)  
-**Team Size**: 1 developer (solo)
-
-**Critical Path**: E1-1 → E1-2 → E2-1 → E2-2 → E2-3 → E2-5 → E3-1 → E4-1 (and all downstream)
-
-See `docs/Engineering/IMPLEMENTATION_ORDER.md` for the recommended build sequence.
+**All issues ready for GitHub creation! 🚀**
